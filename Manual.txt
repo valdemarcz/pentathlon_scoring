@@ -1,6 +1,3 @@
-# pentathlon_scoring
-
-
 Running application (server) with gradle:
 
 	- gradle build from base project folder (PentathlonScoring)
