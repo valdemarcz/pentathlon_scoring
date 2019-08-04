@@ -91,7 +91,7 @@ public class Athlete{
 		return concludingEvent;
 	}
 
-	public void setConcludingEvent(int finalCompetition) {
+	public void setConcludingEvent(int concludingEvent) {
 		this.concludingEvent = concludingEvent;
 	}
 

@@ -17,8 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-
-
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpServer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -70,10 +69,18 @@ public class App {
     	final int serverPort = 8080;
         HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
         server.createContext("/results", (exchange -> {
-        	if("GET".equals(exchange.getRequestMethod())) {
+        	Headers reqHeaders = exchange.getRequestHeaders();
+        	
+        	if("GET".equals(exchange.getRequestMethod()) &&  "v1".equals(reqHeaders.getFirst("Accept-version"))) {
         		
         		String resultsJsonString = gson.toJson(finalList);
-	        	exchange.sendResponseHeaders(200, resultsJsonString.getBytes().length);
+        		StringBuilder str = new StringBuilder("application/results.pentathlonscoring.");
+        		str.append(reqHeaders.getFirst("Accept-version"));
+        		str.append("+json");
+        		exchange.getResponseHeaders().add("Content-Type",   str.toString());
+	        	
+        		exchange.sendResponseHeaders(200, resultsJsonString.getBytes().length);
+	        	
 	        	OutputStream output =  exchange.getResponseBody();
 	        	output.write(resultsJsonString.getBytes());
 	        	output.flush();
